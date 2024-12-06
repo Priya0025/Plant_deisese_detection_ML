@@ -10,6 +10,7 @@ Results: View the results and recommendations for further action.
 
 # About Dataset
 link: https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
+
 This dataset is recreated using offline augmentation from the original dataset. The original dataset can be found on this GitHub repo. This dataset consists of about 87K RGB images of healthy and diseased crop leaves, categorized into 38 different classes. The total dataset is divided into an 80/20 ratio of training and validation sets, preserving the directory structure. A new directory containing 33 test images is created later for prediction purposes.
 
 Content
