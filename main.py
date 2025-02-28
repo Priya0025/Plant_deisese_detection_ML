@@ -2,32 +2,31 @@ from email.mime import image
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-
 import os
-import requests
+import gdown
 
-# Model URL from Google Drive (Direct Link)
-model_url = "https://drive.google.com/uc?export=download&id=1baIMgeetYnJxmRJf3LyuYDt0mvbOMbAE"
+# Google Drive file ID
+file_id = "1baIMgeetYnJxmRJf3LyuYDt0mvbOMbAE"
 model_path = "trained_plant_disease_model.keras"
 
-# Check if model exists, if not, download it
-if not os.path.exists(model_path):
-    st.write("Downloading model... Please wait.")
-    response = requests.get(model_url)
-    with open(model_path, "wb") as f:
-        f.write(response.content)
-    st.write("Model downloaded successfully!")
+# Function to download model from Google Drive
+def download_model():
+    if not os.path.exists(model_path):
+        with st.spinner("Downloading model... Please wait."):
+            gdown.download(f"https://drive.google.com/uc?export=download&id={file_id}", model_path, quiet=False)
+            st.success("Model downloaded successfully!")
 
-# Load Model
-model = tf.keras.models.load_model(model_path)
 # TensorFlow Model Prediction
 def model_prediction(test_image):
-    model = tf.keras.models.load_model("trained_plant_disease_model.keras")
+    download_model()  # Ensure model is downloaded before loading
+
+    model = tf.keras.models.load_model(model_path)
     image = tf.keras.preprocessing.image.load_img(test_image, target_size=(128, 128))
     input_arr = tf.keras.preprocessing.image.img_to_array(image)
     input_arr = np.array([input_arr])  # Convert single image to batch
     predictions = model.predict(input_arr)
     return np.argmax(predictions)  # Return index of max element
+
 
 # Precautions for each disease class
 precautions_dict = {
