@@ -1,7 +1,25 @@
+from email.mime import image
 import streamlit as st
 import tensorflow as tf
 import numpy as np
 
+import os
+import requests
+
+# Model URL from Google Drive (Direct Link)
+model_url = "https://drive.google.com/uc?export=download&id=1baIMgeetYnJxmRJf3LyuYDt0mvbOMbAE"
+model_path = "trained_plant_disease_model.keras"
+
+# Check if model exists, if not, download it
+if not os.path.exists(model_path):
+    st.write("Downloading model... Please wait.")
+    response = requests.get(model_url)
+    with open(model_path, "wb") as f:
+        f.write(response.content)
+    st.write("Model downloaded successfully!")
+
+# Load Model
+model = tf.keras.models.load_model(model_path)
 # TensorFlow Model Prediction
 def model_prediction(test_image):
     model = tf.keras.models.load_model("trained_plant_disease_model.keras")
@@ -159,7 +177,8 @@ elif app_mode == "Disease Recognition":
     
     test_image = st.file_uploader("Choose an Image:")
     if test_image is not None and st.button("Show Image"):
-        st.image(test_image, use_column_width=True)
+        st.image(image, use_container_width=True) 
+
     # Predict button
     if st.button("Predict"):
         st.write("Our Prediction")
